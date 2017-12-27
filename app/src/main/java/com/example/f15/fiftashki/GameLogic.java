@@ -28,6 +28,7 @@ public class GameLogic {
     public final int LEFT = 3;
 
     private int turnCount = 0;
+    private boolean moveW = false;
 
     public GameLogic(int x, int y) {
         fieldX = x;
@@ -64,34 +65,35 @@ public class GameLogic {
 
     public void move(int direction) {
         turnCount++;
+        int newZero;
         switch (direction) {
             case UP:
-                if (zeroY != 0) {
-                    field[zeroY][zeroX] = field[zeroY-1][zeroX];
-                    field[zeroY-1][zeroX] = 0;
-                    zeroY--;
-                }
+                newZero = moveW ? zeroY - 1 : zeroY + 1;
+                if (newZero < 0 || newZero >= fieldY) { break; }
+                field[zeroY][zeroX] = field[newZero][zeroX];
+                field[newZero][zeroX] = 0;
+                zeroY = newZero;
                 break;
             case RIGHT:
-                if (zeroX != fieldX - 1) {
-                    field[zeroY][zeroX] = field[zeroY][zeroX+1];
-                    field[zeroY][zeroX+1] = 0;
-                    zeroX++;
-                }
+                newZero = moveW ? zeroX + 1 : zeroX - 1;
+                if (newZero < 0 || newZero >= fieldY) { break; }
+                field[zeroY][zeroX] = field[zeroY][newZero];
+                field[zeroY][newZero] = 0;
+                zeroX = newZero;
                 break;
             case DOWN:
-                if (zeroY != fieldY - 1) {
-                    field[zeroY][zeroX] = field[zeroY+1][zeroX];
-                    field[zeroY+1][zeroX] = 0;
-                    zeroY++;
-                }
+                newZero = moveW ? zeroY + 1 : zeroY - 1;
+                if (newZero < 0 || newZero >= fieldY) { break; }
+                field[zeroY][zeroX] = field[newZero][zeroX];
+                field[newZero][zeroX] = 0;
+                zeroY = newZero;
                 break;
             case LEFT:
-                if (zeroX != 0) {
-                    field[zeroY][zeroX] = field[zeroY][zeroX-1];
-                    field[zeroY][zeroX-1] = 0;
-                    zeroX--;
-                }
+                newZero = moveW ? zeroX - 1 : zeroX + 1;
+                if (newZero < 0 || newZero >= fieldY) { break; }
+                field[zeroY][zeroX] = field[zeroY][newZero];
+                field[zeroY][newZero] = 0;
+                zeroX = newZero;
                 break;
             default:
                 break;
@@ -121,6 +123,8 @@ public class GameLogic {
     public int getZeroY() {
         return zeroY;
     }
+
+    public void changeMode() { moveW = !moveW; }
 
     public boolean isSolvable(List<Integer> puzzle)
     {
