@@ -23,13 +23,15 @@ public class MainActivity extends AppCompatActivity {
 //    private static final int IMAGEREQUESTCODE = 8242008;
     private static final int IMAGEREQUESTCODE = 123;
     public GameLogic game;
+    DrawView drawView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
         game = new GameLogic(4,4);
-        final DrawView drawView = new DrawView(this);
+        drawView = new DrawView(this);
         drawView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeRight() {
 //                Log.d(DEBUG_TAG, "RIGHT");
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class DrawView extends View {
-        public int color = Color.GREEN;
         Paint p;
         Bitmap bm;
         Bitmap [] cr;
@@ -74,35 +75,26 @@ public class MainActivity extends AppCompatActivity {
 //            bm = BitmapFactory.decodeResource(getResources(), R.drawable.tux);
 //            bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tux), sqr, sqr, false);
             bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.sqrpnc), sqr, sqr, false);
-//            cr = Bitmap.createBitmap(bm, 0, 0, bm.getWidth() / 2, bm.getHeight());
-
-            Log.d(DEBUG_TAG, bm.getWidth() + " " + bm.getHeight());
-            Log.d(DEBUG_TAG, sqr * 2 / game.getFieldX() + " ");
-            Log.d(DEBUG_TAG, sqr * (2+1) / game.getFieldX() + " ");
-            cr = new Bitmap[game.getFieldY()*game.getFieldX()];
-//            cr[0] = Bitmap.createBitmap(bm, bm.getWidth()/ 2, 0, bm.getWidth() / 4, bm.getHeight());
-//            cr[0] = Bitmap.createBitmap(bm, sqr * 2 / game.getFieldX(), sqr * 2 / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
-
-            for (int i = 0; i < game.getFieldY(); i++) {
-                for (int j = 0; j < game.getFieldX(); j++) {
-                    if (i == game.getFieldY()-1 && j == game.getFieldX()-1) {
-                        cr[0] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
-                        break;
-                    }
-                    cr[i*game.getFieldX()+j+1] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
-                }
-            }
+//            cr = new Bitmap[game.getFieldY()*game.getFieldX()];
+//            for (int i = 0; i < game.getFieldY(); i++) {
+//                for (int j = 0; j < game.getFieldX(); j++) {
+//                    if (i == game.getFieldY()-1 && j == game.getFieldX()-1) {
+//                        cr[0] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
+//                        break;
+//                    }
+//                    cr[i*game.getFieldX()+j+1] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
+//                }
+//            }
+            newCrop();
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             canvas.drawColor(Color.WHITE);
-//            canvas.drawColor(color);
             p.setTextSize(canvas.getHeight() / 10);
             canvas.drawText(Integer.toString(game.getTurnCount()), canvas.getWidth() / 2, canvas.getHeight() / 10, p);
 
             int top, left, bot, right;
-//            int sq = canvas.getWidth();
             left = 0;
             right = canvas.getWidth();
             top = canvas.getHeight() / 2 - canvas.getWidth() / 2;
@@ -119,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     canvas.drawText(Integer.toString(game.getF(i,j)), left + j * sqr / game.getFieldX(), top + (i+1) * sqr / game.getFieldY(), p);
                 }
             }
-
             p.setFilterBitmap(true);
 //            canvas.drawBitmap(cr, 0, 0, p);
             for (int i = 0; i < game.getFieldY(); i++) {
@@ -130,6 +121,42 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+        }
+
+        private void newCrop() {
+            cr = new Bitmap[game.getFieldY()*game.getFieldX()];
+            for (int i = 0; i < game.getFieldY(); i++) {
+                for (int j = 0; j < game.getFieldX(); j++) {
+                    if (i == game.getFieldY()-1 && j == game.getFieldX()-1) {
+                        cr[0] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
+                        break;
+                    }
+                    cr[i*game.getFieldX()+j+1] = Bitmap.createBitmap(bm, sqr * j / game.getFieldX(), sqr * i / game.getFieldY(), sqr / game.getFieldX(), sqr / game.getFieldY());
+                }
+            }
+        }
+
+        private void newBitnCrop(Bitmap bit) {
+            Bitmap dstBit;
+            if (bit.getWidth() >= bit.getHeight()){
+                dstBit = Bitmap.createBitmap(
+                        bit,
+                        bit.getWidth()/2 - bit.getHeight()/2,
+                        0,
+                        bit.getHeight(),
+                        bit.getHeight()
+                );
+            }else{
+                dstBit = Bitmap.createBitmap(
+                        bit,
+                        0,
+                        bit.getHeight()/2 - bit.getWidth()/2,
+                        bit.getWidth(),
+                        bit.getWidth()
+                );
+            }
+            bm = Bitmap.createScaledBitmap(dstBit, sqr, sqr, false);
+            newCrop();
         }
 
         int x(int i) {
@@ -173,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (bitmap != null) {
-            // Here you can use bitmap in your application ...
+            drawView.newBitnCrop(bitmap);
         }
     }
 
