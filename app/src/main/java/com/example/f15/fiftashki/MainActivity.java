@@ -33,25 +33,25 @@ public class MainActivity extends AppCompatActivity {
         final DrawView drawView = new DrawView(this);
         drawView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeRight() {
-//                Log.d(DEBUG_TAG, "right");
+//                Log.d(DEBUG_TAG, "RIGHT");
                 game.move(game.RIGHT);
                 drawView.invalidate();
             }
 
             public void onSwipeLeft() {
-//                Log.d(DEBUG_TAG, "left");
+//                Log.d(DEBUG_TAG, "LEFT");
                 game.move(game.LEFT);
                 drawView.invalidate();
             }
 
             public void onSwipeTop() {
-//                Log.d(DEBUG_TAG, "top");
+//                Log.d(DEBUG_TAG, "UP");
                 game.move(game.UP);
                 drawView.invalidate();
             }
 
             public void onSwipeBottom() {
-//                Log.d(DEBUG_TAG, "bot");
+//                Log.d(DEBUG_TAG, "DOWN");
                 game.move(game.DOWN);
                 drawView.invalidate();
             }
@@ -192,18 +192,16 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            Toast.makeText(getBaseContext(), "Action_Settings", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
-
         switch (id) {
             case R.id.action_settings:
                 Toast.makeText(getBaseContext(), "Action_Settings", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.getimage:
                 pickImageFromGallery();
+                break;
+            case R.id.chmod:
+                item.setChecked(!item.isChecked());
+                game.changeMode();
                 break;
             default: break;
         }
