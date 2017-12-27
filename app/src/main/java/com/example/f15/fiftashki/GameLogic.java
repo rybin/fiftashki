@@ -34,7 +34,7 @@ public class GameLogic {
         fieldX = x;
         fieldY = y;
         field = new int[fieldY][fieldX];
-        int [] list = new int[fieldX * fieldY];
+//        List <Integer> list2 = shlist();
         List <Integer> list2 = new ArrayList<>(fieldX * fieldY);
         for (int i = 0; i < fieldX * fieldY; i++) {
             list2.add(i);
@@ -61,6 +61,20 @@ public class GameLogic {
                 }
             }
         }
+    }
+
+    private List <Integer> shlist () {
+        List<Integer> list2 = new ArrayList<>(fieldX * fieldY);
+        for (int i = 0; i < fieldX * fieldY; i++) {
+            list2.add(i);
+        }
+        Collections.shuffle(list2);
+        int damnit = 10;
+        while (fieldX == fieldY && !isSolvable(list2) && damnit > 0) {
+            Collections.shuffle(list2);
+            damnit--;
+        }
+        return list2;
     }
 
     public void move(int direction) {

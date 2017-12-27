@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -154,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case IMAGEREQUESTCODE:
-//                    manageImageFromUri(i.getData());
+                    manageImageFromUri(i.getData());
                     Toast.makeText(getBaseContext(), "Image_get", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -202,6 +201,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.chmod:
                 item.setChecked(!item.isChecked());
                 game.changeMode();
+                Toast.makeText(getBaseContext(), "Invert controls", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.recreate:
+                super.recreate();
                 break;
             default: break;
         }

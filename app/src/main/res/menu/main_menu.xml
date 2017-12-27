@@ -15,4 +15,8 @@
         android:title="Invert controls"
         android:checkable="true"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/recreate"
+        android:title="Recreate"
+        app:showAsAction="never" />
 </menu>
